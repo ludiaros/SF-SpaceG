@@ -1,3 +1,0 @@
-#/bin/sh
-
-g++ -lsfml-system -lsfml-window -lsfml-graphics *.cpp -o Game && ./Game
