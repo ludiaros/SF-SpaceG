@@ -1,3 +1,0 @@
-#/bin/sh
-
-g++ -lsfml-graphics Flashlight.cpp -o F_L && ./F_L
