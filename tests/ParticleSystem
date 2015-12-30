@@ -1,0 +1,3 @@
+#/bin/sh
+
+g++ -lsfml-graphics ParticleSystem.cpp -o P_S && ./P_S

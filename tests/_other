@@ -1,0 +1,15 @@
+// define a 100x100 square, red, with a 10x10 texture mapped on it
+Vertex vertices[] = {
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green),
+Vertex(Vector2f(ships[0].x() + (50 - rand()%100), ships[0].y() + (50 - rand()%100)), Color::Green)
+};
+// draw it
+window.draw(vertices, 4, Points);
