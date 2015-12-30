@@ -7,9 +7,8 @@
 		<Option compiler="gcc" />
 		<Option extended_obj_names="1" />
 		<Build>
-			<Script file="lib_finder.script" />
 			<Target title="Debug">
-				<Option output="bin/Debug/SF.SpaceG" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/SpaceG" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -30,7 +29,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/SF.SpaceG" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/SpaceG" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
