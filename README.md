@@ -5,9 +5,9 @@ This is my first attempt to create a complete game using SFML, actually it's onl
 
 TODO:
 - Make it consistent with framerate changes
-- Build a GUI for it
+- Build a GUI
 - Implement a score system
-- Implement saves maybe?
+- Add sounds
 
 CONTROLS:
 - Up, W = Thrust up
