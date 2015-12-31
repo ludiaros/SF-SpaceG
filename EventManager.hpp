@@ -12,12 +12,16 @@ using namespace std;
 class EventManager {
 
     public:
-
         //Constructors
         EventManager();
-
         //Methods
-        void processEvents  (SystemData& sys_data, Ship& player, GunsManager& guns, WorldManager& world);
+        void processEvents  (SystemData& sys_data, EventList& events);
+        //Fields
+
+    private:
+        //Constructors
+        //Methods
+        //Fields
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "Config.hpp"
+#include "TextureManager.hpp"
 
 using namespace sf;
 using namespace std;
@@ -13,12 +14,11 @@ class Asteroid : public Sprite {
     public:
         //Constructors
         Asteroid();
-        Asteroid(Texture& texture);
         //Methods
         void                update  (View view);
         int                 getX    ()              { return (int) getPosition().x; };
         int                 getY    ()              { return (int) getPosition().y; };
-        //Parameters
+        //Fields
         bool                drawable;
         bool                alive;
         bool                visited;
@@ -35,7 +35,7 @@ class Asteroid : public Sprite {
         float               crashdmg;               //Daño que puede causar a otro objeto al chocar
 
     private:
-        //Parameters
+        //Fields
         static const double PI;
 };
 

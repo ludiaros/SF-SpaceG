@@ -17,14 +17,16 @@ class Structure : public CircleShape {
         void                update      (View view);
         int                 getX        ()                      { return (int) getPosition().x; };
         int                 getY        ()                      { return (int) getPosition().y; };
-        //Parameters
+        //Fields
         bool                drawable;
         bool                alive;
         bool                visited;
         float               damage;                 // Daño recibido?
 
     private:
-        //Parameters
+        //Constructors
+        //Methods
+        //Fields
         static const double PI;
 };
 

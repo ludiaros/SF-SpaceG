@@ -2,6 +2,7 @@
 #define GUNSMANAGER_HPP
 
 #include <vector>
+#include <iostream>
 
 #include "Config.hpp"
 #include "Lasr.hpp"
@@ -13,20 +14,22 @@ using namespace std;
 class GunsManager {
 
     public:
-
         //Constructors
         GunsManager(unsigned int max_ammos);
-
         //Methods
-        void            addShoot    (Texture& texture, Sprite& player);
+        void            addShoot    (int originx, int originy, int angle/*Texture& texture, Sprite& player*/);
         void            draw        (RenderWindow& window);
-        void            update      (WorldManager& world);
-
-        //Parameters
+        void            update      (WorldManager& world, EventList& events);
+        //Fields
         vector<Lasr>    shoots;
         Clock           last_shoot;
         int             t_delay;
         int             a_shoots;
+
+    private:
+        //Constructors
+        //Methods
+        //Fields
 };
 
 #endif

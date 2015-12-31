@@ -2,8 +2,11 @@
 
 WorldManager::WorldManager(unsigned int max_asteroids):
     starfield(),
-    structures(),
+    checkpnt(),
     asteroids(),
+    playerposx(0),
+    playerposy(0),
+    playerposangle(0),
     n_asteroids(max_asteroids),
     a_asteroids(max_asteroids)
 {
@@ -14,11 +17,11 @@ void WorldManager::addStar() {
 }
 
 void WorldManager::addStructure() {
-    structures.push_back(Structure());
+    checkpnt.push_back(Structure());
 }
 
-void WorldManager::addAsteroid(Texture& texture) {
-    asteroids.push_back(Asteroid(texture));
+void WorldManager::addAsteroid() {
+    asteroids.push_back(Asteroid());
 }
 
 void WorldManager::draw(RenderWindow& window) {
@@ -29,9 +32,9 @@ void WorldManager::draw(RenderWindow& window) {
         }
     }
 
-    for (unsigned int i=0; i<structures.size(); ++i) {
-        if (structures[i].drawable) {
-            window.draw(structures[i]);
+    for (unsigned int i=0; i<checkpnt.size(); ++i) {
+        if (checkpnt[i].drawable) {
+            window.draw(checkpnt[i]);
         }
     }
 
@@ -50,9 +53,9 @@ void WorldManager::update(View view) {
         }
     }
 
-    for (unsigned int i=0; i<structures.size(); ++i) {
-        if (structures[i].alive) {
-            structures[i].update(view);
+    for (unsigned int i=0; i<checkpnt.size(); ++i) {
+        if (checkpnt[i].alive) {
+            checkpnt[i].update(view);
         }
     }
 
@@ -88,7 +91,7 @@ void WorldManager::notifyImpact(int i, float damage) {
 void WorldManager::notifyLanding(int i, int type) {
 
     if (type == 0) {//Impacto desde una nave
-        structures[i].visited = true;
+        checkpnt[i].visited = true;
     }
 
     if (type == 1) {
@@ -99,7 +102,7 @@ void WorldManager::notifyLanding(int i, int type) {
 void WorldManager::reset() {
 
     starfield.clear();
-    structures.clear();
+    checkpnt.clear();
     asteroids.clear();
 
     a_asteroids = n_asteroids;

@@ -2,36 +2,28 @@
 
 EventManager::EventManager() {}
 
-void EventManager::processEvents(SystemData& sys_data, Ship& player, GunsManager& guns, WorldManager& world) {
+void EventManager::processEvents(SystemData& sys_data, EventList& events) {
 
     if (!sys_data.paused){
 
         if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) {
-
-            if (Keyboard::isKeyPressed(Keyboard::LControl)) player.jump();
-            else player.accelUp();
+            events.accelUp = true;
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S)) {
-
-           player.accelDn();
+            events.accelDn = true;
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A)) {
-
-            if (Keyboard::isKeyPressed(Keyboard::LControl)) player.turn(-1, false);
-            else player.turn(-1, true);
+            events.turnLeft = true;
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D)) {
-
-            if (Keyboard::isKeyPressed(Keyboard::LControl)) player.turn(1, false);
-            else player.turn(1, true);
+            events.turnRight = true;
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Space)) {
-
-            guns.addShoot(sys_data.texture[0], player);
+            events.shoot = true;
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Add)) {

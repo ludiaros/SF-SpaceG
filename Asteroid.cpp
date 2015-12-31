@@ -2,9 +2,7 @@
 
 const double Asteroid::PI = 4.0*atan(1);
 
-Asteroid::Asteroid() {}
-
-Asteroid::Asteroid(Texture& texture):
+Asteroid::Asteroid():
     drawable(true),
     alive(true),
     visited(false),
@@ -12,7 +10,8 @@ Asteroid::Asteroid(Texture& texture):
     dy(0),
     dmgact(0)
 {
-    setTexture(texture);
+
+    setTexture(*TextureManager::getTexture(2));
 
     setOrigin(getLocalBounds().width/2, getLocalBounds().height/2);
 

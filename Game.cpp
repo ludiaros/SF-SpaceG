@@ -12,9 +12,12 @@
 #include "WorldManager.hpp"
 #include "ShipsManager.hpp"
 
-SystemData   sdata;
+#include "TextureManager.hpp"
 
-EventManager event;
+SystemData   sdata;
+EventList    events;
+
+EventManager eventm;
 WorldManager world(MAX_ASTER);
 GunsManager  gunsm(MAX_SHOOT);
 ShipsManager shipm(MAX_SHIPS);
@@ -31,17 +34,26 @@ int main(int argc, char **argv) {
     sdata.window.setKeyRepeatEnabled(false);
     sdata.view.reset(FloatRect(0, 0, sdata.video.width, sdata.video.height));
 
-    sdata.reset = false;
+    sdata.reset  = false;
     sdata.paused = false;
-    sdata.over = false;
-    sdata.win = false;
+    sdata.over   = false;
+    sdata.win    = false;
 
     sdata.zoom = 1;
 
-    if (!sdata.texture[0].loadFromFile("res/gfx/ammo.png")) return EXIT_FAILURE;
-    if (!sdata.texture[1].loadFromFile("res/gfx/uarr.png")) return EXIT_FAILURE;
-    if (!sdata.texture[8].loadFromFile("res/gfx/rock.png")) return EXIT_FAILURE;
-    if (!sdata.texture[9].loadFromFile("res/gfx/ship.png")) return EXIT_FAILURE;
+    events.jump           = false;
+    events.accelUp        = false;
+    events.accelDn        = false;
+    events.turnLeft       = false;
+    events.smallTurnLeft  = false;
+    events.turnRight      = false;
+    events.smallTurnRight = false;
+    events.shoot          = false;
+
+    TextureManager::addTexture("res/gfx/ammo.png");
+    TextureManager::addTexture("res/gfx/ship.png");
+    TextureManager::addTexture("res/gfx/rock.png");
+    TextureManager::addTexture("res/gfx/uarr.png");
 
     if (!sdata.font.loadFromFile("res/font/DejaVuSansMono.ttf")) return EXIT_FAILURE;
 
@@ -83,21 +95,21 @@ int main(int argc, char **argv) {
         shipm.reset();
         for (unsigned int i=0; i<MAX_STARS; ++i) { world.addStar(); }
         for (unsigned int i=0; i<CHECKPNTS; ++i) { world.addStructure(); }
-        for (unsigned int i=0; i<MAX_ASTER; ++i) { world.addAsteroid(sdata.texture[8]); }
-        for (unsigned int i=0; i<MAX_SHIPS; ++i) { shipm.addShip(sdata.texture[9]); }
+        for (unsigned int i=0; i<MAX_ASTER; ++i) { world.addAsteroid(); }
+        for (unsigned int i=0; i<MAX_SHIPS; ++i) { shipm.addShip(); }
 
         while (!sdata.reset && sdata.window.isOpen()) {
 
             sdata.t_fps.restart();
 
             // Event -------------------------------------------------------
-            event.processEvents(sdata, shipm.ships[0], gunsm, world);
+            eventm.processEvents(sdata, events/*, shipm.ships[0]*/);
 
             // Logic -------------------------------------------------------
             if (!sdata.paused && !sdata.over && !sdata.win) {
                 world.update(sdata.view);
-                gunsm.update(world);
-                shipm.update(world);
+                gunsm.update(world, events);
+                shipm.update(world, events);
             }
 
             if (shipm.ships[0].dmgact == shipm.ships[0].dmgmax) {

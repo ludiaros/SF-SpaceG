@@ -2,13 +2,14 @@
 
 ShipsManager::ShipsManager(unsigned int max_ships):
     ships(),
+    player_ship(0),
     n_ships(max_ships),
     a_ships(max_ships)
 {
 }
 
-void ShipsManager::addShip(Texture& texture) {
-    ships.push_back(Ship(texture));
+void ShipsManager::addShip() {
+    ships.push_back(Ship());
 }
 
 void ShipsManager::draw(RenderWindow& window) {
@@ -19,7 +20,36 @@ void ShipsManager::draw(RenderWindow& window) {
     }
 }
 
-void ShipsManager::update(WorldManager& world) {
+void ShipsManager::update(WorldManager& world, EventList& events) {
+
+    if (events.jump) {
+        ships[player_ship].jump();
+        events.jump = false;
+    }
+    if (events.accelUp) {
+        ships[player_ship].accelUp();
+        events.accelUp = false;
+    }
+    if (events.accelDn) {
+        ships[player_ship].accelDn();
+        events.accelDn = false;
+    }
+    if (events.smallTurnLeft) {
+        ships[player_ship].turn(-1, false);
+        events.smallTurnLeft = false;
+    }
+    if (events.turnLeft) {
+        ships[player_ship].turn(-1, true);
+        events.turnLeft = false;
+    }
+    if (events.smallTurnRight) {
+        ships[player_ship].turn(1, false);
+        events.smallTurnRight = false;
+    }
+    if (events.turnRight) {
+        ships[player_ship].turn(1, true);
+        events.turnRight = false;
+    }
 
     for (unsigned int i=0; i<ships.size(); ++i) {
 
@@ -46,18 +76,18 @@ void ShipsManager::update(WorldManager& world) {
             }
         }
 
-        for (unsigned int j=0; j<world.structures.size(); ++j) {
+        for (unsigned int j=0; j<world.checkpnt.size(); ++j) {
 
             if (
-                world.structures[j].drawable &&
-                world.structures[j].alive &&
-                !world.structures[j].visited
+                world.checkpnt[j].drawable &&
+                world.checkpnt[j].alive &&
+                !world.checkpnt[j].visited
             ) {
 
-                int x = ships[i].getX() - world.structures[j].getX();
+                int x = ships[i].getX() - world.checkpnt[j].getX();
                 x = (x>0 ? x : -x);
 
-                int y = ships[i].getY() - world.structures[j].getY();
+                int y = ships[i].getY() - world.checkpnt[j].getY();
                 y = (y>0 ? y : -y);
 
                 if (x + y < 256) {//Distancia Manhattan
@@ -67,6 +97,10 @@ void ShipsManager::update(WorldManager& world) {
             }
         }
     }
+
+    world.playerposx = ships[0].getX();
+    world.playerposy = ships[0].getY();
+    world.playerposangle = ships[0].getVAngle();
 }
 
 void ShipsManager::reset() {

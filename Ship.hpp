@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "Config.hpp"
+#include "TextureManager.hpp"
 #include "WorldManager.hpp"
 
 using namespace sf;
@@ -14,7 +15,6 @@ class Ship : public Sprite {
     public:
         //Constructors
         Ship();
-        Ship(Texture& texture);
         //Methods
         void                setControl  (bool ctrl);
         void                takeDamage  (float damage);
@@ -32,7 +32,7 @@ class Ship : public Sprite {
         float               getVAngle   ()                      { return (int) vangle; };
         float               getSpeed    ()                      { return (int) (vact*10) / 10.f; };
         float               getTime     ();
-        //Parameters
+        //FIelds
         Clock               t_crono;
         bool                control;
         bool                drawable;
@@ -60,7 +60,9 @@ class Ship : public Sprite {
         float               shieldreg;              // Escudos regeneracion
 
     private:
-        //Parameters
+        //Constructors
+        //Methods
+        //Fields
         static const double PI;
 };
 

@@ -28,7 +28,6 @@ using namespace sf;
 struct SystemData {
     RenderWindow    window;        //Ventana principal del juego (sf::RenderWindow)
     VideoMode       video;         //Modo de video (SFML sf::VideoMode)
-    Texture         texture[100];  //Texturas disponibles para el juego
     String          fps;           //Cadena que contiene el texto de FPS
     String          info;          //Cadena que contiene el texto de informacion
     Font            font;          //Fuente a usar en los textos (SFML sf::Font)
@@ -47,6 +46,17 @@ struct SystemData {
     int             destx;
     int             desty;
     float           zoom;
+};
+
+struct EventList {
+    bool            jump;
+    bool            accelUp;
+    bool            accelDn;
+    bool            turnLeft;
+    bool            smallTurnLeft;
+    bool            turnRight;
+    bool            smallTurnRight;
+    bool            shoot;
 };
 
 #endif

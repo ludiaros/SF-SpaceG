@@ -9,11 +9,13 @@
 		<Build>
 			<Target title="Release">
 				<Option output="bin/SpaceG" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
 				<Option object_output="obj/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="../SF.SpaceG" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -54,6 +56,10 @@
 		<Unit filename="Star.hpp" />
 		<Unit filename="Structure.cpp" />
 		<Unit filename="Structure.hpp" />
+		<Unit filename="TextureManager.cpp" />
+		<Unit filename="TextureManager.hpp" />
+		<Unit filename="WindowManager.cpp" />
+		<Unit filename="WindowManager.hpp" />
 		<Unit filename="WorldManager.cpp" />
 		<Unit filename="WorldManager.hpp" />
 		<Extensions>
