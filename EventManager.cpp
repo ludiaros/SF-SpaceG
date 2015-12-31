@@ -4,7 +4,7 @@ EventManager::EventManager() {}
 
 void EventManager::processEvents(SystemData& sys_data, EventList& events) {
 
-    if (!sys_data.paused){
+    /*if (!sys_data.paused){
 
         if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) {
             events.accelUp = true;
@@ -147,5 +147,5 @@ void EventManager::processEvents(SystemData& sys_data, EventList& events) {
                 break;
             }
         }
-    }
+    }*/
 }
