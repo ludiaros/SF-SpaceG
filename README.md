@@ -3,6 +3,12 @@ A game (prototype) about evading objects in the space
 
 This is my first attempt to create a complete game using SFML, actually it's only a prototype on which i implement what i've learned about SFML
 
+TOOLS:
+SFML 2.3
+Inkscape
+Gimp
+Code::Blocks
+
 TODO:
 - Make it consistent with framerate changes
 - Build a GUI

@@ -15,7 +15,7 @@ class Star : public CircleShape {
         Star();
         //Methods
         void                update  (View view);
-        //Parameters
+        //Fields
         bool                drawable;
         bool                alive;
         int                 zindex;
@@ -23,7 +23,9 @@ class Star : public CircleShape {
         int                 anim1;//Variable para animar el parpadeo de la estrella
 
     private:
-        //Parameters
+        //Constructors
+        //Methods
+        //Fields
         static const double PI;
 };
 

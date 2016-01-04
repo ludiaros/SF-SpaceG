@@ -2,8 +2,10 @@
 #define LASR_HPP
 
 #include <cmath>
+#include <iostream>
 
 #include "Config.hpp"
+#include "TextureManager.hpp"
 #include "WorldManager.hpp"
 
 using namespace sf;
@@ -14,10 +16,10 @@ class Lasr : public Sprite {
     public:
         //Constructors
         Lasr();
-        Lasr(Texture& texture, Sprite& player);
         //Methods
         void                update      ();
-        //Parameters
+        void                setAngle    (int a) { angle = a; }
+        //Fields
         bool                drawable;
         bool                alive;
         int                 frames;
@@ -29,7 +31,9 @@ class Lasr : public Sprite {
         float               angle;
 
     private:
-        //Parameters
+        //Constructors
+        //Methods
+        //Fields
         static const double PI;
 };
 

@@ -2,9 +2,7 @@
 
 const double Ship::PI = 4.0*atan(1);
 
-Ship::Ship() {}
-
-Ship::Ship(Texture& texture):
+Ship::Ship():
     t_crono(),
     control(false),
     drawable(true),
@@ -32,7 +30,7 @@ Ship::Ship(Texture& texture):
     time(0)
 {
 
-    setTexture(texture);
+    setTexture(*TextureManager::getTexture(1));
 
     setOrigin(getLocalBounds().width/2, getLocalBounds().height/2);
 

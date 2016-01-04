@@ -2,8 +2,7 @@
 #define EVENTMANAGER_HPP
 
 #include "Config.hpp"
-#include "GunsManager.hpp"
-#include "WorldManager.hpp"
+#include "WindowManager.hpp"
 #include "Ship.hpp"
 
 using namespace sf;
@@ -12,12 +11,16 @@ using namespace std;
 class EventManager {
 
     public:
-
         //Constructors
         EventManager();
-
         //Methods
-        void processEvents  (SystemData& sys_data, Ship& player, GunsManager& guns, WorldManager& world);
+        void processEvents  (WindowManager& window, GameState& gstate, EventList& events);
+        //Fields
+
+    private:
+        //Constructors
+        //Methods
+        //Fields
 };
 
 #endif

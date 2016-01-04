@@ -8,14 +8,6 @@ GunsManager::GunsManager(unsigned int max_shoots):
 {
 }
 
-void GunsManager::addShoot(Texture& texture, Sprite& player) {
-    if (a_shoots > 0 && last_shoot.getElapsedTime().asMilliseconds() > t_delay) {
-        shoots.push_back(Lasr(texture, player));
-        last_shoot.restart();
-        a_shoots--;
-    }
-}
-
 void GunsManager::draw(RenderWindow& window) {
     for (unsigned int i=0; i<shoots.size(); ++i) {
         if (shoots[i].drawable) {
@@ -24,13 +16,27 @@ void GunsManager::draw(RenderWindow& window) {
     }
 }
 
-void GunsManager::update(WorldManager& world) {
+void GunsManager::update(WorldManager& world, EventList& events) {
+
+    if (events.shoot) {
+
+        if (a_shoots > 0 && last_shoot.getElapsedTime().asMilliseconds() > t_delay) {
+
+            Lasr sht = Lasr();
+            sht.setPosition(world.playerposx, world.playerposy);
+            sht.setAngle(world.playerposangle);
+            shoots.push_back(sht);
+            last_shoot.restart();
+            a_shoots--;
+        }
+        events.shoot = false;
+    }
 
     for (unsigned int i=0; i<shoots.size(); ++i) {
 
         shoots[i].update();
 
-        for (unsigned int j=0; j<world.a_asteroids/*asteroids.size()*/; ++j) {
+        for (unsigned int j=0; j<world.a_asteroids; ++j) {
 
             if (shoots[i].drawable && world.asteroids[j].alive && world.asteroids[j].drawable) {
 

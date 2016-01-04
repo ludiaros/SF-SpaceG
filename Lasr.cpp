@@ -2,9 +2,7 @@
 
 const double Lasr::PI = 4.0*atan(1);
 
-Lasr::Lasr() {}
-
-Lasr::Lasr(Texture& texture, Sprite& player):
+Lasr::Lasr():
     drawable(true),
     alive(true),
     frames(0),
@@ -13,16 +11,13 @@ Lasr::Lasr(Texture& texture, Sprite& player):
     dy(),
     vact(10),
     damage(100),
-    angle(player.getRotation())
+    angle(0)
 {
-
-    setTexture(texture);
+    setTexture(*TextureManager::getTexture(0));
 
     setTextureRect(IntRect(0, 0, 15, 75));
 
     setOrigin(getLocalBounds().width/2, getLocalBounds().height/2);
-
-    setPosition(player.getPosition());
 }
 
 void Lasr::update() {

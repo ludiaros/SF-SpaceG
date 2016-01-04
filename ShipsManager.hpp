@@ -13,20 +13,23 @@ using namespace std;
 class ShipsManager {
 
     public:
-
         //Constructors
         ShipsManager(unsigned int max_ships);
-
         //Methods
         void            reset   ();
-        void            addShip (Texture& texture);
+        void            addShip ();
         void            draw    (RenderWindow& window);
-        void            update  (WorldManager& world);
-
-        //Parameters
+        void            update  (WorldManager& world, EventList& events);
+        //Fields
         vector<Ship>    ships;
+        unsigned int    player_ship;
         unsigned int    n_ships; //Numero de naves
         unsigned int    a_ships; //Naves activas
+
+    private:
+        //Constructors
+        //Methods
+        //Fields
 };
 
 #endif
