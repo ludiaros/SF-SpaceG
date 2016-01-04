@@ -20,16 +20,12 @@ GameState    gstate;
 
 EventManager eventm;
 WindowManager window;
+
 WorldManager world(MAX_ASTER);
 GunsManager  gunsm(MAX_SHOOT);
 ShipsManager shipm(MAX_SHIPS);
 
 int main(int argc, char **argv) {
-
-    gstate.reset  = false;
-    gstate.paused = false;
-    gstate.over   = false;
-    gstate.win    = false;
 
     events.jump           = false;
     events.accelUp        = false;
@@ -52,6 +48,7 @@ int main(int argc, char **argv) {
         gstate.over = false;
         gstate.win = false;
 
+        //Reinicia el factor de zoom si se reinicia el juego
         window.resetZoom();
 
         srand((unsigned) time(NULL)); //Define la semilla para la generacion de numeros aleatorios
