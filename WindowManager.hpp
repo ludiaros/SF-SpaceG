@@ -12,13 +12,18 @@ class WindowManager : public RenderWindow {
         //Constructors
         WindowManager();
         //Methods
+        void            drawLimits          ();
+        void            drawFPS             ();
+        void            drawInfo            ();
         void            setDefaultView      ();
         void            toggleFullScreen    ();
         void            resetZoom           ();
         void            setZoom             (float z);
         void            setCenter           (Vector2f center);
+        void            drawText            (String txt, int fontsize, int x, int y);
         //Fields
         VideoMode       video;         //Modo de video (SFML sf::VideoMode)
+        String          title;         //
         String          fps;           //Cadena que contiene el texto de FPS
         String          info;          //Cadena que contiene el texto de informacion
         Font            font;          //Fuente a usar en los textos (SFML sf::Font)
@@ -37,7 +42,10 @@ class WindowManager : public RenderWindow {
         float           zoom_max;
 
     private:
+        //Constructors
+        //Methods
         //Fields
+        VertexArray     limits;
 };
 
 #endif
