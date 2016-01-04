@@ -105,5 +105,9 @@ void WorldManager::reset() {
     checkpnt.clear();
     asteroids.clear();
 
+    for (unsigned int i=0; i<MAX_STARS; ++i) { addStar(); }
+    for (unsigned int i=0; i<CHECKPNTS; ++i) { addStructure(); }
+    for (unsigned int i=0; i<MAX_ASTER; ++i) { addAsteroid(); }
+
     a_asteroids = n_asteroids;
 }

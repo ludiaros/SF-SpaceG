@@ -43,4 +43,19 @@ class WorldManager {
         //Fields
 };
 
+    ///////////////////////////////////////////////////////
+//    Sprite compass;
+//    compass.setTexture(sdata.texture[1]);
+//    compass.setOrigin(compass.getLocalBounds().width/2, compass.getLocalBounds().height/2);
+//    compass.setPosition(SCR_W-64, SCR_H-64);
+//    float x, y, theta;
+    ///////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////
+            /*x = shipm.ships[0].getX() - sdata.destx;
+            y = shipm.ships[0].getY() - sdata.desty;
+            theta = (acos(y / (sqrt(x*x + y*y))) * 180 / 3.141596);
+            compass.setRotation(theta);
+            sdata.window.draw(compass);*/
+            ///////////////////////////////////////////////////////
+
 #endif
