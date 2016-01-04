@@ -25,30 +25,7 @@
 
 using namespace sf;
 
-struct SystemData {
-    /*RenderWindow    window;        //Ventana principal del juego (sf::RenderWindow)
-    VideoMode       video;         //Modo de video (SFML sf::VideoMode)*/
-    String          fps;           //Cadena que contiene el texto de FPS
-    String          info;          //Cadena que contiene el texto de informacion
-    Font            font;          //Fuente a usar en los textos (SFML sf::Font)
-    /*View            view;          //Vista principal (SFML sf::View)*/
-    Text            text;          //Textos a mostrar en pantalla (SFML sf::Text)
-    Clock           t_fps;         //Temporizador para lle var la cuenta de FPS (SFML sf::Clock)
-    /*bool            rot_fixed;     //Cambiar el punto de referencia para la rotacion (nave / mapa)
-    bool            no_info;       //Mostrar / ocultar informacion en pantalla
-    bool            no_fps;        //Mostrar /Ocultar contador FPS
-    bool            fullscr;       //Iniciar en pantalla completa o modo ventana
-    bool            reset;         //Forzar el reinicio del bucle principal del juego
-    bool            paused;        //Pausar el bucle principal del juego
-    bool            over;          //Indica si se termino el juego
-    bool            win;           //Indica si se gano el juego
-    int             style;         //Indica si la ventana esta en pantalla completa
-    int             destx;
-    int             desty;
-    float           zoom;*/
-};
-
-struct GameData {
+struct GameState {
     bool            reset;         //Forzar el reinicio del bucle principal del juego
     bool            paused;        //Pausar el bucle principal del juego
     bool            over;          //Indica si se termino el juego
