@@ -10,6 +10,10 @@ Gimp
 Geany
 Code::Blocks
 
+REFERENCES:
+sfml-dev.org Forums, tutorials and official documentation
+https://github.com/SFML/SFML/wiki/Source:-Simple-Collision-Detection-for-SFML-2
+
 TODO:
 - Make it consistent with framerate changes
 - Build a GUI
