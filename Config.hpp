@@ -1,8 +1,8 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+#include <stdio.h>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 #define MAX_STARS   10000   //Cantidad de estrellas
 #define MAX_ASTER   2500    //Cantidad de asteroides
@@ -23,19 +23,29 @@
                             //Problema con el tipo de dato puede ser?
 #define MAP_H       32000   //Altura del mapa
 
+#define RUNNING     0
+#define PAUSED      1
+#define RESET       2
+#define OVER        3
+#define WIN         4
+
+#define TOPLEFT     0
+#define TOPCENTER   1
+#define TOPRIGHT    2
+#define MIDLEFT     3
+#define MIDCENTER   4
+#define MIDRIGHT    5
+#define BOTLEFT     6
+#define BOTCENTER   7
+#define BOTRIGHT    8
+
 using namespace sf;
 
 struct GameState {
-    bool            reset;         //Forzar el reinicio del bucle principal del juego
-    bool            paused;        //Pausar el bucle principal del juego
-    bool            over;          //Indica si se termino el juego
-    bool            win;           //Indica si se gano el juego
-    int             destx;
-    int             desty;
+    int             status; //Ver los valores en la linea 25 de Config.hpp
 };
 
 struct EventList {
-    bool            jump;
     bool            accelUp;
     bool            accelDn;
     bool            turnLeft;

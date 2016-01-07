@@ -4,7 +4,7 @@ EventManager::EventManager() {}
 
 void EventManager::processEvents(WindowManager& window, GameState& gstate, EventList& events) {
 
-    if (!gstate.paused){
+    if (gstate.status != PAUSED) {//!gstate.paused) {
 
         if (Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W)) {
             events.accelUp = true;
@@ -28,26 +28,27 @@ void EventManager::processEvents(WindowManager& window, GameState& gstate, Event
 
         if (Keyboard::isKeyPressed(Keyboard::Add)) {
 
-            if (window.zoom >= 0.25) {
-                window.view.zoom(0.95);
-                window.zoom *= 0.95;
+            window.setZoom(0.95);
+            /*if (window.zoom >= 0.25) {
+                //view.zoom(0.95);
+                //window.zoom *= 0.95;
             }
             if (window.zoom <= 0.25) {
                 window.view.zoom(0.25 / window.zoom);
                 window.zoom = 0.25;
-            }
+            }*/
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Subtract)) {
 
-            if (window.zoom <= 50) {
-                window.view.zoom(1.05);
-                window.zoom *= 1.05;
+            window.setZoom(1.05);
+            /*if (window.zoom <= 50) {
+                window.setZoom(1.05);
             }
             if (window.zoom >= 50) {
                 window.view.zoom(50 / window.zoom);
                 window.zoom = 50;
-            }
+            }*/
         }
     }
 
@@ -62,9 +63,10 @@ void EventManager::processEvents(WindowManager& window, GameState& gstate, Event
 
         if (event.type == Event::MouseWheelMoved) {
 
-            if (!gstate.paused) {
+            if (gstate.status != PAUSED) {//!gstate.paused) {
 
-                window.view.zoom(1 - (float) event.mouseWheel.delta / 5);
+                window.setZoom(1 - (float) event.mouseWheel.delta / 5);
+                /*window.view.zoom(1 - (float) event.mouseWheel.delta / 5);
                 window.zoom *= 1 - (float) event.mouseWheel.delta / 5;
 
                 if (window.zoom <= 0.25) {
@@ -74,7 +76,7 @@ void EventManager::processEvents(WindowManager& window, GameState& gstate, Event
                 if (window.zoom >= 50) {
                     window.view.zoom(50 / window.zoom);
                     window.zoom = 50;
-                }
+                }*/
             }
         }
 
@@ -91,40 +93,42 @@ void EventManager::processEvents(WindowManager& window, GameState& gstate, Event
                 break;
 
                 case Keyboard::Numpad0:
-                    if (!gstate.paused) {
-                        window.view.zoom(1 / window.zoom);
-                        window.zoom = 1;
-                    }
+                    window.resetZoom();
+                    //if (!gstate.paused) {
+                        //window.view.zoom(1 / window.zoom);
+                        //window.zoom = 1;
+                    //}
                 break;
 
                 case Keyboard::Return:
-                    gstate.reset = true;
+                    gstate.status = RESET;//gstate.reset = true;
                 break;
 
                 case Keyboard::Escape:
-                    gstate.paused = !gstate.paused;
+                    gstate.status = (gstate.status == PAUSED ? RUNNING : PAUSED);
+                    //gstate.paused = !gstate.paused;
                 break;
 
                 case Keyboard::I:
-                    window.no_info = !window.no_info;
+                    window.show_info = !window.show_info;
                 break;
 
                 case Keyboard::F:
-                    window.no_fps = !window.no_fps;
+                    window.show_fps = !window.show_fps;
                 break;
 
                 case Keyboard::R:
-                    if (!gstate.paused) { window.rot_fixed = !window.rot_fixed; }
+                    if (gstate.status != PAUSED/*!gstate.paused*/) { window.rot_fixed = !window.rot_fixed; }
                 break;
 
                 case Keyboard::Y:
-                    if (gstate.over || gstate.win) {
-                        gstate.reset = true;
+                    if (gstate.status == OVER || gstate.status == WIN/*gstate.over || gstate.win*/) {
+                        gstate.status = RESET;//gstate.reset = true;
                     }
                 break;
 
                 case Keyboard::N:
-                    if (gstate.over || gstate.win) {
+                    if (gstate.status == OVER || gstate.status == WIN/*gstate.over || gstate.win*/) {
                         window.close();
                     }
                 break;

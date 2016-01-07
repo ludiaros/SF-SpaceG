@@ -2,7 +2,6 @@
 #define LASR_HPP
 
 #include <cmath>
-#include <iostream>
 
 #include "Config.hpp"
 #include "TextureManager.hpp"

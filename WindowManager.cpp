@@ -2,30 +2,16 @@
 
 WindowManager::WindowManager():
     rot_fixed(false),
-    no_info(false),
-    no_fps(false),
+    show_info(true),
+    show_fps(true),
+    show_limits(false),
     fullscr(false),
     zoom(1),
-    zoom_min(0.25),
+    zoom_min(0.75),
     zoom_max(50),
-    px(0),
-    py(0),
     title("SF.SpaceG"),
     limits(LinesStrip, 5)
 {
-    video.bitsPerPixel = video.getDesktopMode().bitsPerPixel;
-    video.width = SCR_W;
-    video.height = SCR_H;
-
-    style = Style::Default;
-
-    view.reset(FloatRect(0, 0, video.width, video.height));
-
-    setZoom(zoom);
-    setVerticalSyncEnabled(true);
-    setMouseCursorVisible(false);
-    setKeyRepeatEnabled(false);
-    create(video, title, style);
 
     font.loadFromFile("res/font/DejaVuSansMono.ttf");
 
@@ -39,6 +25,21 @@ WindowManager::WindowManager():
     limits[3].color = Color(0, 255, 0, 255);
     limits[4].position = Vector2f(0, MAP_H);
     limits[4].color = Color(0, 255, 0, 255);
+
+    video.bitsPerPixel = video.getDesktopMode().bitsPerPixel;
+    video.width = SCR_W;
+    video.height = SCR_H;
+
+    style = Style::Default;
+
+    view.reset(FloatRect(0, 0, video.width, video.height));
+
+    setKeyRepeatEnabled(false);
+    setMouseCursorVisible(false);
+
+    create(video, title, style);
+
+    setFramerateLimit(60);
 }
 
 void WindowManager::setDefaultView() {
@@ -61,11 +62,12 @@ void WindowManager::toggleFullScreen() {
         style = Style::Default;
     }
 
-    create(video, title, style);
-
-    setVerticalSyncEnabled(true);
     setMouseCursorVisible(false);
     setKeyRepeatEnabled(false);
+
+    create(video, title, style);
+
+    setFramerateLimit(30);
 
     fullscr = !fullscr;
 }
@@ -76,10 +78,27 @@ void WindowManager::resetZoom() {
     zoom = 1;
 }
 
+void WindowManager::resetView() {
+
+    setView(view);
+}
+
 void WindowManager::setZoom(float z) {
 
-    if (z * zoom > 0.25 && z * zoom < 4) {
-        zoom = z * zoom;
+    if (zoom >= zoom_min && zoom <= zoom_max) {
+        zoom *= z;
+        view.zoom(z);
+    }
+
+    if (zoom <= zoom_min) {
+        z = zoom_min / zoom;
+        zoom = zoom_min;
+        view.zoom(z);
+    }
+
+    if (zoom >= zoom_max) {
+        z = zoom_max / zoom;
+        zoom = zoom_max;
         view.zoom(z);
     }
 }
@@ -93,34 +112,61 @@ void WindowManager::setCenter(Vector2f center) {
 }
 
 void WindowManager::drawLimits() {
-    draw(limits);
+
+    if (show_limits) {
+        draw(limits);
+    }
 }
 
 void WindowManager::drawFPS() {
 
-    if (no_fps) {
-        text = Text("FPS: " + fps, font, 16);
-        text.setStyle(Text::Bold);
-        text.setPosition(5, 5);
-        draw(text);
+    if (show_fps) {
+        drawText("FPS: " + fps, TOPLEFT, 16, 10, 10);
     }
 }
 
 void WindowManager::drawInfo() {
 
-    if (no_info) {
-        text = Text(info, font, 16);
-        text.setStyle(Text::Bold);
-        text.setPosition(5, video.height-200);
-        draw(text);
+    if (show_info) {
+        drawText(info, BOTLEFT, 16, 10, video.height-10);
     }
 }
 
-void WindowManager::drawText(String txt, int fontsize, int x, int y) {
+void WindowManager::drawText(String txt, int align, int fontsize, int x, int y) {
 
     text = Text(txt, font, fontsize);
     text.setStyle(Text::Bold);
-    text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height/2);
+
+    switch (align) {
+        case TOPLEFT:
+            text.setOrigin(0, 0);
+        break;
+        case TOPCENTER:
+            text.setOrigin(text.getLocalBounds().width/2, 0);
+        break;
+        case TOPRIGHT:
+            text.setOrigin(text.getLocalBounds().width, 0);
+        break;
+        case MIDLEFT:
+            text.setOrigin(0, text.getLocalBounds().height/2);
+        break;
+        case MIDCENTER:
+            text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height/2);
+        break;
+        case MIDRIGHT:
+            text.setOrigin(text.getLocalBounds().width, text.getLocalBounds().height/2);
+        break;
+        case BOTLEFT:
+            text.setOrigin(0, text.getLocalBounds().height);
+        break;
+        case BOTCENTER:
+            text.setOrigin(text.getLocalBounds().width/2, text.getLocalBounds().height);
+        break;
+        case BOTRIGHT:
+            text.setOrigin(text.getLocalBounds().width, text.getLocalBounds().height);
+        break;
+    }
+
     text.setPosition(x, y);
     draw(text);
 }

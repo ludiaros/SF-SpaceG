@@ -26,7 +26,6 @@ Ship::Ship():
     crashdmg(1),
     shieldmax(100),
     shieldreg(0.1),
-    checkpoints(0),
     time(0)
 {
 
@@ -79,11 +78,6 @@ void Ship::setControl(bool ctrl) {
     control = ctrl;
 }
 
-void Ship::markCheckP() {
-
-    checkpoints++;
-}
-
 void Ship::accelUp() {
 
     if (!start) {
@@ -126,19 +120,13 @@ void Ship::takeDamage(float damage) {
     accelIn();
 }
 
-void Ship::jump() {
-
-    mangle = vangle;
-    vact = vjmp;
-}
-
-void Ship::reset() {
+/*void Ship::reset() {
     if (start) {
         start = false;
         time = (int) (t_crono.getElapsedTime().asMilliseconds()) / 1000.f;
         t_crono.restart();
     }
-}
+}*/
 
 void Ship::turn(int dir, bool maxi) {
 

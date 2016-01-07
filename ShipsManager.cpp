@@ -4,7 +4,7 @@ ShipsManager::ShipsManager(unsigned int max_ships):
     ships(),
     player_ship(0),
     n_ships(max_ships),
-    a_ships(max_ships)
+    active_ships(max_ships)
 {
 }
 
@@ -22,10 +22,6 @@ void ShipsManager::draw(RenderWindow& window) {
 
 void ShipsManager::update(WorldManager& world, EventList& events) {
 
-    if (events.jump) {
-        ships[player_ship].jump();
-        events.jump = false;
-    }
     if (events.accelUp) {
         ships[player_ship].accelUp();
         events.accelUp = false;
@@ -55,54 +51,90 @@ void ShipsManager::update(WorldManager& world, EventList& events) {
 
         ships[i].update(world);
 
-        for (unsigned int j=0; j<world.a_asteroids/*asteroids.size()*/; ++j) {
+        for (unsigned int j=0; j<world.active_asteroids; ++j) {
 
-            if (world.asteroids[j].drawable && world.asteroids[j].alive) {
+            if (world.list_asteroids[j].drawable && world.list_asteroids[j].alive) {
 
-                int x = ships[i].getX() - world.asteroids[j].getX();
+                int x = ships[i].getX() - world.list_asteroids[j].getX();
                 x = (x>0 ? x : -x);
 
-                int y = ships[i].getY() - world.asteroids[j].getY();
+                int y = ships[i].getY() - world.list_asteroids[j].getY();
                 y = (y>0 ? y : -y);
 
                 if (x + y < 1024) {//Distancia Manhattan
-                    if (Collision::PixelPerfectTest(ships[i], world.asteroids[j], 128)) {
+                    if (Collision::PixelPerfectTest(ships[i], world.list_asteroids[j], 128)) {
 
-                        world.notifyImpact(j, ships[i].crashdmg);
+                        world.notifyImpact(j, ships[i].getCrashDmg());
 
-                        ships[i].takeDamage(world.asteroids[j].crashdmg);
+                        ships[i].takeDamage(world.list_asteroids[j].crashdmg);
                     }
                 }
             }
         }
 
-        for (unsigned int j=0; j<world.checkpnt.size(); ++j) {
+        for (unsigned int j=0; j<world.list_checkpoints.size(); ++j) {
 
             if (
-                world.checkpnt[j].drawable &&
-                world.checkpnt[j].alive &&
-                !world.checkpnt[j].visited
+                world.list_checkpoints[j].drawable &&
+                world.list_checkpoints[j].alive &&
+                !world.list_checkpoints[j].visited
             ) {
 
-                int x = ships[i].getX() - world.checkpnt[j].getX();
+                int x = ships[i].getX() - world.list_checkpoints[j].getX();
                 x = (x>0 ? x : -x);
 
-                int y = ships[i].getY() - world.checkpnt[j].getY();
+                int y = ships[i].getY() - world.list_checkpoints[j].getY();
                 y = (y>0 ? y : -y);
 
                 if (x + y < 256) {//Distancia Manhattan
                     world.notifyLanding(j, 0);//type 0 si es desde una nave
-                    ships[i].markCheckP();
                 }
             }
         }
     }
 
-    world.playerposx = ships[0].getX();
-    world.playerposy = ships[0].getY();
-    world.playerposangle = ships[0].getVAngle();
+    //Mantiene un registro de la posicion del jugador para otras clases que lo requieran
+    //(Priciplamente el bucle principal del programa y GunsManager)
+    world.playerposx = ships[player_ship].getX();
+    world.playerposy = ships[player_ship].getY();
+    world.playerposangle = ships[player_ship].getVAngle();
 }
 
 void ShipsManager::reset() {
+
     ships.clear();
+    for (unsigned int i=0; i<MAX_SHIPS; ++i) { addShip(); }
+}
+
+float ShipsManager::getPlayerSpeed() {
+
+    return ships[player_ship].getSpeed();
+}
+
+float ShipsManager::getPlayerVAngle() {
+
+    return ships[player_ship].getVAngle();
+}
+
+float ShipsManager::getPlayerDamage() {
+
+    return ships[player_ship].getDamage();
+}
+
+float ShipsManager::getPlayerShields() {
+
+    return ships[player_ship].getShields();
+}
+
+float ShipsManager::getPlayerTime() {
+
+    return ships[player_ship].getTime();
+}
+
+bool ShipsManager::playerDead() {
+
+    if (ships[player_ship].getDamage() == ships[player_ship].getDamageMax()) {
+        return true;
+    }
+    return false;
 }

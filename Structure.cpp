@@ -18,12 +18,13 @@ Structure::Structure():
 
 void Structure::update(View view) {
 
-    if (alive) { setOutlineColor(Color(64, 128, 64, 255)); }
+    if (alive) { setOutlineColor(Color(128, 255, 128, 255)); }
     else { setOutlineColor(Color(255, 0, 0, 128)); }
 
     if (visited) { setOutlineColor(Color(128, 64, 64, 255)); }
 
     drawable = true;
+    setRotation(getRotation()+1);
 
     if (
         getPosition().x < view.getCenter().x - view.getSize().x ||
