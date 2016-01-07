@@ -36,13 +36,13 @@ void GunsManager::update(WorldManager& world, EventList& events) {
 
         shoots[i].update();
 
-        for (unsigned int j=0; j<world.a_asteroids; ++j) {
+        for (unsigned int j=0; j<world.active_asteroids; ++j) {
 
-            if (shoots[i].drawable && world.asteroids[j].alive && world.asteroids[j].drawable) {
+            if (shoots[i].drawable && world.list_asteroids[j].alive && world.list_asteroids[j].drawable) {
 
-                if (Collision::BoundingBoxTest(shoots[i], world.asteroids[j])) {
+                if (Collision::BoundingBoxTest(shoots[i], world.list_asteroids[j])) {
 
-                    if (Collision::PixelPerfectTest(shoots[i], world.asteroids[j], 128)) {
+                    if (Collision::PixelPerfectTest(shoots[i], world.list_asteroids[j], 128)) {
 
                         world.notifyImpact(j, shoots[i].damage);
 

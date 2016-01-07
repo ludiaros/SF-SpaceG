@@ -2,7 +2,6 @@
 #define GUNSMANAGER_HPP
 
 #include <vector>
-#include <iostream>
 
 #include "Config.hpp"
 #include "Lasr.hpp"
