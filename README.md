@@ -1,4 +1,4 @@
-# SF.SpaceG
+# SF-SpaceG
 A game (prototype) about evading objects in the space
 
 This is my first attempt to create a complete game using SFML, actually it's only a prototype on which i implement what i've learned about SFML
@@ -7,6 +7,7 @@ TOOLS:
 SFML 2.3
 Inkscape
 Gimp
+Geany
 Code::Blocks
 
 TODO:
@@ -20,8 +21,8 @@ CONTROLS:
 - Down, S = Thrust down
 - Left, A = Turn left, change ship angle and keep direction
 - Right, D = Turn right, change ship angle and keep direction
-- Ctrl+Left, Ctrl+A = Small turn to left, change ship angle and keep direction
-- Ctrl+Right, Ctrl+D = Small turn to right, change ship angle and keep direction
+- Ctrl+Left, Ctrl+A = Small turn to left
+- Ctrl+Right, Ctrl+D = Small turn to right
 - Space = Shoot laser
 - Intro = Reset the game
 - Esc = Pause / Resume
