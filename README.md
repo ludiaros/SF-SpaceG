@@ -4,7 +4,7 @@ A game (prototype) about evading objects in the space
 This is my first attempt to create a complete game using SFML, actually it's only a prototype on which i implement what i've learned about SFML
 
 DOWNLOAD EXECUTABLE:
-- (https://goo.gl/NgIYJO)
+- (https://github.com/ludiaros/SF-SpaceG/releases)
 
 CONTROLS:
 - Up, W = Thrust up
