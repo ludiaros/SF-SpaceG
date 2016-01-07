@@ -19,23 +19,22 @@ class WorldManager {
         //Methods
         void                reset           ();
         void                addStar         ();
-        void                addStructure    ();
+        void                addCheckPoint   ();
         void                addAsteroid     ();
         void                draw            (RenderWindow& window);
         void                update          (View view);
-        void                notifyCollision (Asteroid& astrd);
         void                notifyImpact    (int i, float damage);
         void                notifyLanding   (int i, int type);
         //Fields
         vector<Star>        starfield;
-        vector<Structure>   checkpnt;
-        vector<Asteroid>    asteroids;
+        vector<Structure>   list_checkpoints;
+        vector<Asteroid>    list_asteroids;
         int                 playerposx;
         int                 playerposy;
         int                 playerposangle;
-        unsigned int        n_asteroids;    //Cantidad de asteroides
-        unsigned int        a_asteroids;    //Asteroids activos (los asteroides inactivos no se
-                                            //borran solo se deshabilita la interaccion con ellos)
+        unsigned int        active_checkpoints; //Checkpoints que aun no se han visitado
+        unsigned int        active_asteroids;   //Asteroids activos (los asteroides inactivos no se
+                                                //borran solo se deshabilita la interaccion con ellos)
 
     private:
         //Constructors

@@ -3,7 +3,6 @@
 
 #include "Config.hpp"
 
-using namespace sf;
 using namespace std;
 
 class WindowManager : public RenderWindow {
@@ -18,33 +17,35 @@ class WindowManager : public RenderWindow {
         void            setDefaultView      ();
         void            toggleFullScreen    ();
         void            resetZoom           ();
+        void            resetView           ();
         void            setZoom             (float z);
-        void            setCenter           (Vector2f center);
-        void            drawText            (String txt, int fontsize, int x, int y);
+        void            setCenter           (sf::Vector2f center);
+        void            drawText            (String txt, int align, int fontsize, int x, int y);
         //Fields
-        VideoMode       video;         //Modo de video (SFML sf::VideoMode)
-        String          title;         //
-        String          fps;           //Cadena que contiene el texto de FPS
-        String          info;          //Cadena que contiene el texto de informacion
-        Font            font;          //Fuente a usar en los textos (SFML sf::Font)
-        View            view;          //Vista principal (SFML sf::View)
-        Text            text;          //Textos a mostrar en pantalla (SFML sf::Text)
-        Clock           t_fps;         //Temporizador para lle var la cuenta de FPS (SFML sf::Clock)
+        sf::Clock       t_fps;         //Temporizador para lle var la cuenta de FPS (SFML sf::Clock)
+        sf::Font        font;          //Fuente a usar en los textos (SFML sf::Font)
+        sf::String      title;         //
+        sf::String      fps;           //Cadena que contiene el texto de FPS
+        sf::String      info;          //Cadena que contiene el texto de informacion
+        sf::Text        text;          //Textos a mostrar en pantalla (SFML sf::Text)
+        sf::VideoMode   video;         //Modo de video (SFML sf::VideoMode)
+        sf::View        view;          //Vista principal (SFML sf::View)
         bool            rot_fixed;     //Cambiar el punto de referencia para la rotacion (nave / mapa)
-        bool            no_info;       //Mostrar / ocultar informacion en pantalla
-        bool            no_fps;        //Mostrar /Ocultar contador FPS
+        bool            show_info;     //Mostrar / ocultar informacion en pantalla
+        bool            show_fps;      //Mostrar /Ocultar contador FPS
+        bool            show_limits;   //Mostrar /Ocultar Limites del area
         bool            fullscr;       //Iniciar en pantalla completa o modo ventana
-        int             style;         //Indica si la ventana esta en pantalla completa
-        int             px;
-        int             py;
-        float           zoom;
-        float           zoom_min;
-        float           zoom_max;
 
     private:
         //Constructors
         //Methods
         //Fields
+        int             px;
+        int             py;
+        int             style;         //Indica si la ventana esta en pantalla completa
+        float           zoom;
+        float           zoom_min;
+        float           zoom_max;
         VertexArray     limits;
 };
 

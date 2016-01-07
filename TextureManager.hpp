@@ -15,9 +15,9 @@ class TextureManager {
         TextureManager();
         //Methods
         static bool             addTexture(string path);
-        static Texture*          getTexture(int id);
+        static Texture*         getTexture(int id);
         //Fields
-        static vector<Texture*>  texture_list;
+        static vector<Texture*> texture_list;
 
     private:
         //Constructors
