@@ -3,16 +3,19 @@ A game (prototype) about evading objects in the space
 
 This is my first attempt to create a complete game using SFML, actually it's only a prototype on which i implement what i've learned about SFML
 
+DOWNLOAD EXECUTABLE:
+- (https://goo.gl/NgIYJO)
+
 TOOLS:
-SFML 2.3
-Inkscape
-Gimp
-Geany
-Code::Blocks
+- SFML 2.3
+- Inkscape
+- Gimp
+- Geany
+- Code::Blocks
 
 REFERENCES:
-sfml-dev.org Forums, tutorials and official documentation
-https://github.com/SFML/SFML/wiki/Source:-Simple-Collision-Detection-for-SFML-2
+- (sfml-dev.org) Forums, tutorials and official documentation
+- (https://github.com/SFML/SFML/wiki/Source:-Simple-Collision-Detection-for-SFML-2)
 
 TODO:
 - Make it consistent with framerate changes
