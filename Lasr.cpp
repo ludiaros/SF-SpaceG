@@ -1,42 +1,40 @@
 #include "Lasr.hpp"
 
-const double Lasr::PI = 4.0*atan(1);
-
 Lasr::Lasr():
     drawable(true),
     alive(true),
-    frames(0),
-    t_active(250),
+    maxTimeActive(1000),
     dx(),
     dy(),
-    vact(10),
+    vact(25.0),
     damage(100),
-    angle(0)
+    angle(0),
+    timeActive()
 {
-    setTexture(*TextureManager::getTexture(0));
+    setTexture(*ResourceManager::getTexture("ammo"));
 
-    setTextureRect(IntRect(0, 0, 15, 75));
+    setTextureRect(sf::IntRect(0, 0, 15, 75));
 
     setOrigin(getLocalBounds().width/2, getLocalBounds().height/2);
+
+    timeActive.restart();
 }
 
-void Lasr::update() {
+void Lasr::update(float delta) {
 
-    if (frames < t_active) {
+    if (timeActive.getElapsedTime().asMilliseconds() < maxTimeActive) {
 
-        setScale(getScale().x, 1.0 - (frames / t_active));
+        setScale(getScale().x, 1.0 - (timeActive.getElapsedTime().asMilliseconds() / maxTimeActive));
 
-        dx = -vact * cos((90 + angle) * PI / 180);
-        dy = -vact * sin((90 + angle) * PI / 180);
+        dx = -(vact * delta) * cos((90 + angle) * PI / 180);
+        dy = -(vact * delta) * sin((90 + angle) * PI / 180);
 
         if (vact > 0) {
             move(dx, dy);
             setRotation(angle);
         }
-        frames++;
     }
     else {
-        frames = 0;
         drawable = false;
         alive = false;
     }

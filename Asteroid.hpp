@@ -2,22 +2,20 @@
 #define ASTEROID_HPP
 
 #include <cmath>
+#include <sstream>
 
-#include "Config.hpp"
-#include "TextureManager.hpp"
+#include "globals.hpp"
+#include "ResourceManager.hpp"
 
-using namespace sf;
-using namespace std;
-
-class Asteroid : public Sprite {
+class Asteroid : public sf::Sprite {
 
     public:
         //Constructors
         Asteroid();
         //Methods
-        void                update  (View view);
-        int                 getX    ()              { return (int) getPosition().x; };
-        int                 getY    ()              { return (int) getPosition().y; };
+        void                update  (sf::View view, float delta);
+        float               getX    ()                  { return getPosition().x; };
+        float               getY    ()                  { return getPosition().y; };
         //Fields
         bool                drawable;
         bool                alive;
@@ -36,7 +34,6 @@ class Asteroid : public Sprite {
 
     private:
         //Fields
-        static const double PI;
 };
 
 #endif

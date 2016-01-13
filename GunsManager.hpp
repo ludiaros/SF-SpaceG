@@ -3,27 +3,26 @@
 
 #include <vector>
 
-#include "Config.hpp"
+#include "globals.hpp"
+#include "WindowManager.hpp"
 #include "Lasr.hpp"
 #include "Collision.h"
-
-using namespace sf;
-using namespace std;
 
 class GunsManager {
 
     public:
         //Constructors
-        GunsManager(unsigned int max_ammos);
+        GunsManager();
         //Methods
-        void            addShoot    (int originx, int originy, int angle/*Texture& texture, Sprite& player*/);
-        void            draw        (RenderWindow& window);
-        void            update      (WorldManager& world, EventList& events);
+        void                addShoot    (int originx, int originy, int angle);
+        void                draw        (WindowManager& window);
+        void                reset       (WindowManager& window);
+        void                update      (WorldManager& world, WindowManager& window);
         //Fields
-        vector<Lasr>    shoots;
-        Clock           last_shoot;
-        int             t_delay;
-        int             a_shoots;
+        int                 delayShoot;
+        int                 activeShoots;
+        std::vector<Lasr>   shoots;
+        sf::Clock           lastShoot;
 
     private:
         //Constructors

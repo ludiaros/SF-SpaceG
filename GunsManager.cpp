@@ -1,48 +1,50 @@
 #include "GunsManager.hpp"
 
-GunsManager::GunsManager(unsigned int max_shoots):
+GunsManager::GunsManager():
     shoots(),
-    last_shoot(),
-    t_delay(100),
-    a_shoots(max_shoots)
+    lastShoot(),
+    delayShoot(100),
+    activeShoots()
 {
 }
 
-void GunsManager::draw(RenderWindow& window) {
-    for (unsigned int i=0; i<shoots.size(); ++i) {
+void GunsManager::draw(WindowManager& window) {
+    for (std::size_t i=0; i<shoots.size(); ++i) {
         if (shoots[i].drawable) {
             window.draw(shoots[i]);
         }
     }
 }
 
-void GunsManager::update(WorldManager& world, EventList& events) {
+void GunsManager::update(WorldManager& world, WindowManager& window) {
 
-    if (events.shoot) {
+    float delta = window.frameTime / (1000.f / 60.f);
 
-        if (a_shoots > 0 && last_shoot.getElapsedTime().asMilliseconds() > t_delay) {
+    //if (window.eventMap[window.bindings["shoot"]]) {
+    if (window.eventMap["VK_SPACE"]) {
+
+        if (activeShoots > 0 && lastShoot.getElapsedTime().asMilliseconds() > delayShoot) {
 
             Lasr sht = Lasr();
-            sht.setPosition(world.playerposx, world.playerposy);
-            sht.setAngle(world.playerposangle);
+            sht.setPosition(window.gameInfo.playerPosX, window.gameInfo.playerPosY);
+            sht.setAngle(window.gameInfo.playerAngle);
             shoots.push_back(sht);
-            last_shoot.restart();
-            a_shoots--;
+            lastShoot.restart();
+            activeShoots--;
         }
-        events.shoot = false;
     }
 
-    for (unsigned int i=0; i<shoots.size(); ++i) {
+    for (std::size_t i=0; i<shoots.size(); ++i) {
 
-        shoots[i].update();
+        shoots[i].update(delta);
 
-        for (unsigned int j=0; j<world.active_asteroids; ++j) {
+        for (std::size_t j=0; j<world.activeAsteroids; ++j) {
 
-            if (shoots[i].drawable && world.list_asteroids[j].alive && world.list_asteroids[j].drawable) {
+            if (shoots[i].drawable && world.listAsteroids[j].alive && world.listAsteroids[j].drawable) {
 
-                if (Collision::BoundingBoxTest(shoots[i], world.list_asteroids[j])) {
+                if (Collision::BoundingBoxTest(shoots[i], world.listAsteroids[j])) {
 
-                    if (Collision::PixelPerfectTest(shoots[i], world.list_asteroids[j], 128)) {
+                    if (Collision::PixelPerfectTest(shoots[i], world.listAsteroids[j], 128)) {
 
                         world.notifyImpact(j, shoots[i].damage);
 
@@ -56,4 +58,12 @@ void GunsManager::update(WorldManager& world, EventList& events) {
             shoots.erase(shoots.begin()+i);
         }
     }
+
+    window.gameInfo.gunShoots = activeShoots;
+}
+
+void GunsManager::reset(WindowManager& window) {
+
+    shoots.clear();
+    activeShoots = window.gameInfo.maxShoots;
 }
