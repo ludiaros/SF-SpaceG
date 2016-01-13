@@ -1,128 +1,65 @@
 #include <SFML/Window.hpp>
 
-#include <sstream>
-#include <ctime>
+#include "globals.hpp"
 
-#include "Config.hpp"
-
-#include "EventManager.hpp"
+#include "ResourceManager.hpp"
 #include "WindowManager.hpp"
-#include "TextureManager.hpp"
+#include "GameScreenManager.hpp"
 
-#include "WorldManager.hpp"
-#include "GunsManager.hpp"
-#include "ShipsManager.hpp"
+WindowManager     window;
+GameScreenManager gstate;
 
-EventList       events;
-GameState       gstate;
+int main() {
 
-EventManager    eventm;
-WindowManager   window;
+    //LOAD RESOURCES -------------------------------------------------------------------------------
+    ResourceManager::addFont("mono", "res/font/DejaVuSansMono.ttf");
+    ResourceManager::addFont("unique", "res/font/Unique.ttf");
 
-WorldManager    world(MAX_ASTER);
-GunsManager     gunsm(MAX_SHOOT);
-ShipsManager    shipm(MAX_SHIPS);
+    ResourceManager::addTexture("uarr", "res/gfx/uarr.png");
+    ResourceManager::addTexture("ammo", "res/gfx/ammo.png");
+    ResourceManager::addTexture("ship", "res/gfx/ship.png");
+    ResourceManager::addTexture("rock0", "res/gfx/rock (0).png");
+    ResourceManager::addTexture("rock1", "res/gfx/rock (1).png");
+    ResourceManager::addTexture("rock2", "res/gfx/rock (2).png");
+    ResourceManager::addTexture("rock3", "res/gfx/rock (3).png");
+    ResourceManager::addTexture("rock4", "res/gfx/rock (4).png");
+    ResourceManager::addTexture("rock5", "res/gfx/rock (5).png");
+    ResourceManager::addTexture("rock6", "res/gfx/rock (6).png");
+    ResourceManager::addTexture("rock7", "res/gfx/rock (7).png");
+    ResourceManager::addTexture("rock8", "res/gfx/rock (8).png");
+    ResourceManager::addTexture("rock9", "res/gfx/rock (9).png");
+    //----------------------------------------------------------------------------------------------
 
-int main(int argc, char **argv) {
+    //INITIALIZE OPTIONS AND GAME DATA -------------------------------------------------------------
+    window.gameInfo.maxAsteroids   = 2500;
+    window.gameInfo.maxCheckpoints = 5;
+    window.gameInfo.maxShoots      = 100;
+    window.gameInfo.maxStars       = 500;
+    window.gameInfo.maxShips       = 1;
+    //----------------------------------------------------------------------------------------------
 
-    //Carga las texturas a usar por el juego
-    TextureManager::addTexture("res/gfx/ammo.png");
-    TextureManager::addTexture("res/gfx/ship.png");
-    TextureManager::addTexture("res/gfx/rock.png");
-    TextureManager::addTexture("res/gfx/uarr.png");
+    //INITIALIZE GAME STATES -----------------------------------------------------------------------
+    gstate.addState(LOAD,    new GameScreenLoad());
+    gstate.addState(CONFIG,  new GameScreenConfig());
+    gstate.addState(PLAY,    new GameScreenPlay());
+    gstate.addState(PAUSED,  new GameScreenPause());
+    gstate.addState(RESET,   new GameScreenReset());
+    gstate.addState(OVER,    new GameScreenOver());
+    gstate.addState(WIN,     new GameScreenWin());
+    gstate.addState(CREDITS, new GameScreenCredits());
+    gstate.addState(EXIT,    new GameScreenExit());
+    gstate.status = LOAD;
+    //----------------------------------------------------------------------------------------------
 
-    while (window.isOpen()) {//Evita que el juego se cierre cuando status == RESET
+    //MAIN LOOP-------------------------------------------------------------------------------------
+    while (window.isOpen()) {
 
-        gstate.status = RUNNING;//Inicia el juego en modo running
+        window.getWindowEvents(gstate.status);
 
-        window.resetZoom();//Reinicia el factor de zoom si se reinicia el juego
-
-        srand((unsigned) time(NULL)); //Define la semilla para la generacion de numeros aleatorios
-
-        world.reset();//Reinicia el mundo (posiciona las estrellas y asteroides)
-        shipm.reset();//Reincia las naves (reinicia el estado y la posicion de cada nave)
-
-        //Si status == RESET rompe este bucle y pasa a la linea 36 de Game.cpp
-        while (gstate.status != RESET && window.isOpen()) {
-
-            //Reinicia el contador de FPS
-            window.t_fps.restart();
-
-            // Eventos -----------------------------------------------------
-            eventm.processEvents(window, gstate, events);
-
-            if (gstate.status == RUNNING) {
-
-                // Actualizacion de la logica del juego ------------------------
-                world.update(window.view);
-                gunsm.update(world, events);
-                shipm.update(world, events);
-
-                if (shipm.playerDead()) {
-                    gstate.status = OVER;
-                }
-
-                if (world.active_checkpoints == 0) {
-
-                    gstate.status = WIN;
-                }
-            }
-
-            // Renderiza los objetos actualizados --------------------------
-            window.clear();
-            window.resetView();
-            window.view.setCenter(world.playerposx, world.playerposy);  //Hace que la camara siga a
-                                                                        //la nave controlada
-
-
-            if (!window.rot_fixed) { window.view.setRotation(0); }  //Hace el angulo de la camara
-                                                                    //fijo
-            else { window.view.setRotation(world.playerposangle); } //La camara rota siguiendo el
-                                                                    //angulo de la nave controlada
-
-            world.draw(window);
-            gunsm.draw(window);
-            shipm.draw(window);
-
-            window.drawLimits();
-
-            window.setDefaultView();
-
-            window.drawFPS();
-            window.drawInfo();
-
-            if (gstate.status == PAUSED) {
-                window.drawText("PAUSED", MIDCENTER, 64, SCR_W/2, SCR_H/2);
-            }
-
-            if (gstate.status == OVER) {
-                window.drawText("   GAME OVER   \nPlay again? y/n", MIDCENTER, 64, SCR_W/2, SCR_H/2);
-            }
-
-            if (gstate.status == WIN) {
-                window.drawText("    YOU WIN    \nPlay again? y/n", MIDCENTER, 64, SCR_W/2, SCR_H/2);
-            }
-
-            window.display();
-
-            // Messages and GUI --------------------------------------------
-            stringstream txt2;
-            txt2 << "      Speed : " << shipm.getPlayerSpeed() << endl;
-            txt2 << "      Angle : " << shipm.getPlayerVAngle() << endl;
-            txt2 << "     Damage : " << shipm.getPlayerDamage() << endl;
-            txt2 << "     Shield : " << shipm.getPlayerShields() << endl;
-            txt2 << "       Time : " << shipm.getPlayerTime() << endl;
-            txt2 << endl;
-            txt2 << "Checkpoints : " << world.active_checkpoints << endl;
-            txt2 << "  Asteroids : " << world.active_asteroids << endl;
-            txt2 << "       AMMO : " << gunsm.a_shoots << flush;
-            window.info = txt2.str();
-
-            stringstream txt1;
-            txt1 << 1000/window.t_fps.getElapsedTime().asMilliseconds() << flush;
-            window.fps = txt1.str();
-        }
+        gstate.getState()->getEvents(window, gstate.status);
+        gstate.getState()->run(window, gstate.status);
     }
+    //----------------------------------------------------------------------------------------------
 
     return EXIT_SUCCESS;
 }
