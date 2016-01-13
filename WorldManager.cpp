@@ -1,13 +1,10 @@
 #include "WorldManager.hpp"
 
-WorldManager::WorldManager(unsigned int max_asteroids):
+WorldManager::WorldManager():
     starfield(),
-    list_checkpoints(),
-    list_asteroids(),
-    playerposx(0),
-    playerposy(0),
-    playerposangle(0),
-    active_asteroids(max_asteroids)
+    listCheckpoints(),
+    listAsteroids(),
+    activeAsteroids()
 {
 }
 
@@ -16,82 +13,87 @@ void WorldManager::addStar() {
 }
 
 void WorldManager::addCheckPoint() {
-    list_checkpoints.push_back(Structure());
+    listCheckpoints.push_back(Structure());
 }
 
 void WorldManager::addAsteroid() {
-    list_asteroids.push_back(Asteroid());
+    listAsteroids.push_back(Asteroid());
 }
 
-void WorldManager::draw(RenderWindow& window) {
+void WorldManager::draw(WindowManager& window) {
 
-    for (unsigned int i=0; i<starfield.size(); ++i) {
+    for (std::size_t i=0; i<starfield.size(); ++i) {
         if (starfield[i].drawable) {
             window.draw(starfield[i]);
         }
     }
 
-    for (unsigned int i=0; i<list_checkpoints.size(); ++i) {
-        if (list_checkpoints[i].drawable) {
-            window.draw(list_checkpoints[i]);
+    for (std::size_t i=0; i<listCheckpoints.size(); ++i) {
+        if (listCheckpoints[i].drawable) {
+            window.draw(listCheckpoints[i]);
         }
     }
 
-    for (unsigned int i=0; i<list_asteroids.size(); ++i) {
-        if (list_asteroids[i].drawable) {
-            window.draw(list_asteroids[i]);
+    for (std::size_t i=0; i<listAsteroids.size(); ++i) {
+        if (listAsteroids[i].drawable) {
+            window.draw(listAsteroids[i]);
         }
     }
 }
 
-void WorldManager::update(View view) {
+void WorldManager::update(WindowManager& window) {
 
-    for (unsigned int i=0; i<starfield.size(); ++i) {
+    float delta = window.frameTime / (1000.f / 60.f);
+
+    for (std::size_t i=0; i<starfield.size(); ++i) {
         if (starfield[i].alive) {
-            starfield[i].update(view);
+            starfield[i].update(window.view, delta);
         }
     }
 
-    for (unsigned int i=0; i<list_checkpoints.size(); ++i) {
-        if (list_checkpoints[i].alive) {
-            list_checkpoints[i].update(view);
+    for (std::size_t i=0; i<listCheckpoints.size(); ++i) {
+        if (listCheckpoints[i].alive) {
+            listCheckpoints[i].update(window.view, delta);
         }
     }
 
-    for (unsigned int i=0; i<list_asteroids.size(); ++i) {
-        if (list_asteroids[i].alive) {
-            list_asteroids[i].update(view);
+    for (std::size_t i=0; i<listAsteroids.size(); ++i) {
+        if (listAsteroids[i].alive) {
+            listAsteroids[i].update(window.view, delta);
         }
     }
+
+    window.gameInfo.worldCheckpoints = activeCheckpoints;
+    window.gameInfo.worldAsteroids = activeAsteroids;
 }
 
 void WorldManager::notifyImpact(int i, float damage) {
 
-    list_asteroids[i].setColor(Color(255, 128, 128, 128));//Colorea de amarillo y con transparencia del 50%
+    listAsteroids[i].setColor(sf::Color(255, 128, 128, 128));//Colorea de amarillo y con transparencia del 50%
 
-    if (list_asteroids[i].dmgact < list_asteroids[i].dmgmax) {
-        list_asteroids[i].dmgact += damage;
+    if (listAsteroids[i].dmgact < listAsteroids[i].dmgmax) {
+        listAsteroids[i].dmgact += damage;
     }
     else {
-        list_asteroids[i].alive = false;                //Marca el objeto como inactivo (evita que
+        listAsteroids[i].alive = false;                //Marca el objeto como inactivo (evita que
                                                         //se mueva)
 
-        list_asteroids.push_back(list_asteroids[i]);    //Envia el asteroide al final de la lista, con esto y
+        listAsteroids.push_back(listAsteroids[i]);    //Envia el asteroide al final de la lista, con esto y
                                                         //la variable a_asteroids se deshabilita la deteccion
                                                         //de colisiones
-        list_asteroids.erase(list_asteroids.begin()+i); //Borra el asteroide de la lista (en realidad debido a
+        listAsteroids.erase(listAsteroids.begin()+i); //Borra el asteroide de la lista (en realidad debido a
                                                         //la instruccion anterior queda una copia al final de
                                                         //la lista)
 
-        active_asteroids--;
+        activeAsteroids--;
     }
 }
 
 void WorldManager::notifyLanding(int i, int type) {
 
     if (type == 0) {//Impacto desde una nave
-        list_checkpoints[i].visited = true;
-        active_checkpoints--;
+        listCheckpoints[i].visited = true;
+        activeCheckpoints--;
     }
 
     if (type == 1) {//Impacto desde un asteroide
@@ -99,16 +101,16 @@ void WorldManager::notifyLanding(int i, int type) {
     }
 }
 
-void WorldManager::reset() {
+void WorldManager::reset(WindowManager& window) {
 
     starfield.clear();
-    list_checkpoints.clear();
-    list_asteroids.clear();
+    listCheckpoints.clear();
+    listAsteroids.clear();
 
-    for (unsigned int i=0; i<MAX_STARS; ++i) { addStar(); }
-    for (unsigned int i=0; i<CHECKPNTS; ++i) { addCheckPoint(); }
-    for (unsigned int i=0; i<MAX_ASTER; ++i) { addAsteroid(); }
+    for (std::size_t i=0; i<window.gameInfo.maxStars; ++i) { addStar(); }
+    for (std::size_t i=0; i<window.gameInfo.maxCheckpoints; ++i) { addCheckPoint(); }
+    for (std::size_t i=0; i<window.gameInfo.maxAsteroids; ++i) { addAsteroid(); }
 
-    active_asteroids   = MAX_ASTER;
-    active_checkpoints = CHECKPNTS;
+    activeAsteroids   = window.gameInfo.maxAsteroids;
+    activeCheckpoints = window.gameInfo.maxCheckpoints;
 }
