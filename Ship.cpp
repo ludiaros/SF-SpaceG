@@ -1,7 +1,5 @@
 #include "Ship.hpp"
 
-const double Ship::PI = 4.0*atan(1);
-
 Ship::Ship():
     t_crono(),
     control(false),
@@ -10,40 +8,43 @@ Ship::Ship():
     start(false),
     dx(0),
     dy(0),
-    vact(0.00),
-    vmin(0.00),
-    vmax(25.00),
-    vjmp(250.00),
+    vact(0.0),
+    vmin(0.0),
+    vmax(20.0),
+    vjmp(250.0),
     accelup(0.25),
     acceldn(0.05),
     accelin(0.01),
     mangle(45),
     vangle(45),
-    turnf(2.50),
+    turnf(3.50),
     turns(0.50),
     dmgact(0),
     dmgmax(100),
-    crashdmg(1),
+    crashdmg(1.0),
     shieldmax(100),
     shieldreg(0.1),
     time(0)
 {
 
-    setTexture(*TextureManager::getTexture(1));
+    setTexture(*ResourceManager::getTexture("ship"));
 
     setOrigin(getLocalBounds().width/2, getLocalBounds().height/2);
 
     setPosition(MAP_W/2, MAP_H/2);
 }
 
-void Ship::update(WorldManager& world) {
+void Ship::update(WorldManager& world, float delta) {
 
     if (control) {
     }
     else { //Controlada por el jugador (Teclado + Mouse)
 
         dx = -vact * cos((90 + vangle) * (PI / 180));
+        dx = dx * delta;
+
         dy = -vact * sin((90 + vangle) * (PI / 180));
+        dy = dy * delta;
 
         if (
             (getPosition().x + dx < 0) ||
@@ -78,7 +79,7 @@ void Ship::setControl(bool ctrl) {
     control = ctrl;
 }
 
-void Ship::accelUp() {
+void Ship::accelUp(float delta) {
 
     if (!start) {
         start = true;
@@ -86,59 +87,53 @@ void Ship::accelUp() {
     }
 
     mangle = vangle;
-    if (vact + accelup <= vmax) { vact += accelup; }
+    if (vact + (accelup * delta) <= vmax) { vact += (accelup * delta); }
     else { vact = vmax; }
 }
 
-void Ship::accelDn() {
+void Ship::accelDn(float delta) {
 
-    if (vact - acceldn >= vmin) { vact -= acceldn; }
+    if (vact - (acceldn * delta) >= vmin) { vact -= (acceldn * delta); }
     else { vact = vmin; }
 }
 
-void Ship::accelIn() {
+void Ship::accelIn(float delta) {
 
-    if (vact - accelin >= vmin) { vact -= accelin; }
+    if (vact - (accelin * delta) >= vmin) { vact -= (accelin * delta); }
     else { vact = vmin; }
 }
 
-void Ship::takeDamage(float damage) {
+void Ship::takeDamage(float delta, float damage) {
 
-    if (dmgact + damage < dmgmax) {
+    if (dmgact + (damage * delta) < dmgmax) {
         if (shieldmax > 0) {
-            dmgact += damage/100;
-            shieldmax -= damage/10;
+            dmgact += ((damage/100) * delta);
+            shieldmax -= ((damage/10) * delta);
         }
         else {
-            dmgact += damage;
+            dmgact += (damage * delta);
         }
     }
     else {
         dmgact = dmgmax;
     }
 
-    accelIn();
+    accelIn(delta);
 }
 
-/*void Ship::reset() {
-    if (start) {
-        start = false;
-        time = (int) (t_crono.getElapsedTime().asMilliseconds()) / 1000.f;
-        t_crono.restart();
-    }
-}*/
+void Ship::turn(float delta, int dir) {
 
-void Ship::turn(int dir, bool maxi) {
-
-    if (maxi) vangle += (dir * turnf);
-    else vangle += (dir * turns);
+    vangle += (dir * turnf * delta);
 
     if (vangle > 359) vangle -= 360;
     if (vangle < 0) vangle += 360;
 }
 
-float Ship::getTime() {
+int Ship::getTime() {
 
-    if (!start) { return time; }
-    return time = (int) (t_crono.getElapsedTime().asMilliseconds()) / 1000.f;
+    if (start) {
+        time = static_cast<int>(t_crono.getElapsedTime().asSeconds());
+    }
+
+    return time;
 }

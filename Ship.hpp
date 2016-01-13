@@ -3,37 +3,34 @@
 
 #include <cmath>
 
-#include "Config.hpp"
-#include "TextureManager.hpp"
+#include "globals.hpp"
+#include "ResourceManager.hpp"
 #include "WorldManager.hpp"
 
-using namespace sf;
-using namespace std;
-
-class Ship : public Sprite {
+class Ship : public sf::Sprite {
 
     public:
         //Constructors
         Ship();
         //Methods
+        void        accelDn     (float delta);
+        void        accelIn     (float delta);
+        void        accelUp     (float delta);
         void        setControl  (bool ctrl);
-        void        takeDamage  (float damage);
-        void        turn        (int dir, bool maxi);
-        void        update      (WorldManager& world);
-        void        accelUp     ();
-        void        accelDn     ();
-        void        accelIn     ();
-        //void        reset       ();
-        int         getX        ()                      { return (int) getPosition().x; };
-        int         getY        ()                      { return (int) getPosition().y; };
-        float       getDamage   ()                      { return (int) (dmgact*10) / 10.f; };
-        float       getVAngle   ()                      { return (int) vangle; };
-        float       getSpeed    ()                      { return (int) (vact*10) / 10.f; };
-        float       getShields  ()                      { return (int) (shieldmax*10) / 10.f; };
+        void        setSpeed    (float speed)           { vact = speed; };
+        void        takeDamage  (float delta, float damage);
+        void        turn        (float delta, int dir);
+        void        update      (WorldManager& world, float delta);
+        int         getTime     ();
         float       getCrashDmg ()                      { return crashdmg; };
+        float       getDamage   ()                      { return (dmgact * 10) / 10.f; };
         float       getDamageMax()                      { return dmgmax; };
-        float       getTime     ();
-        //FIelds
+        float       getShields  ()                      { return (shieldmax * 10) / 10.f; };
+        float       getSpeed    ()                      { return (vact * 10) / 10.f; };
+        float       getVAngle   ()                      { return vangle; };
+        float       getX        ()                      { return getPosition().x; };
+        float       getY        ()                      { return getPosition().y; };
+        //Fields
         bool        drawable;
         bool        alive;
 
@@ -41,7 +38,6 @@ class Ship : public Sprite {
         //Constructors
         //Methods
         //Fields
-        Clock       t_crono;
         bool        control;
         bool        start;
         int         time;                   // Tiempo empleado en completar el recorrido
@@ -63,8 +59,7 @@ class Ship : public Sprite {
         float       crashdmg;               // Daño que puede causar a otro objeto al chocar
         float       shieldmax;              // Escudos
         float       shieldreg;              // Escudos regeneracion
-
-        static const double PI;
+        sf::Clock   t_crono;
 };
 
 #endif

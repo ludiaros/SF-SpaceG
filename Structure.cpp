@@ -1,7 +1,5 @@
 #include "Structure.hpp"
 
-const double Structure::PI = 4.0*atan(1);
-
 Structure::Structure():
     drawable(true),
     alive(true),
@@ -12,19 +10,19 @@ Structure::Structure():
     setRadius(256);
     setOrigin(getLocalBounds().width/2, getLocalBounds().height/2);
     setPosition(rand()%MAP_W, rand()%MAP_H);
-    setFillColor(Color(0, 0, 0, 0));
+    setFillColor(sf::Color(0, 0, 0, 0));
     setOutlineThickness(128);
 }
 
-void Structure::update(View view) {
+void Structure::update(sf::View view, float delta) {
 
-    if (alive) { setOutlineColor(Color(128, 255, 128, 255)); }
-    else { setOutlineColor(Color(255, 0, 0, 128)); }
+    if (alive) { setOutlineColor(sf::Color(128, 255, 128, 255)); }
+    else { setOutlineColor(sf::Color(255, 0, 0, 128)); }
 
-    if (visited) { setOutlineColor(Color(128, 64, 64, 255)); }
+    if (visited) { setOutlineColor(sf::Color(128, 64, 64, 255)); }
 
     drawable = true;
-    setRotation(getRotation()+1);
+    setRotation(getRotation() + delta);
 
     if (
         getPosition().x < view.getCenter().x - view.getSize().x ||

@@ -1,20 +1,19 @@
 #ifndef STAR_HPP
 #define STAR_HPP
 
+#include <SFML/Graphics.hpp>
+
 #include <cmath>
 
-#include "Config.hpp"
+#include "globals.hpp"
 
-using namespace sf;
-using namespace std;
-
-class Star : public CircleShape {
+class Star : public sf::CircleShape {
 
     public:
         //Constructors
         Star();
         //Methods
-        void                update  (View view);
+        void                update  (sf::View view, float delta);
         //Fields
         bool                drawable;
         bool                alive;
@@ -26,7 +25,6 @@ class Star : public CircleShape {
         //Constructors
         //Methods
         //Fields
-        static const double PI;
 };
 
 #endif

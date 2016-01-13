@@ -1,10 +1,9 @@
 #include "ShipsManager.hpp"
 
-ShipsManager::ShipsManager(unsigned int max_ships):
+ShipsManager::ShipsManager():
     ships(),
-    player_ship(0),
-    n_ships(max_ships),
-    active_ships(max_ships)
+    playerShip(0),
+    activeShips()
 {
 }
 
@@ -12,78 +11,75 @@ void ShipsManager::addShip() {
     ships.push_back(Ship());
 }
 
-void ShipsManager::draw(RenderWindow& window) {
+void ShipsManager::draw(WindowManager& window) {
 
-    for (unsigned int i=0; i<ships.size(); ++i) {
+    for (std::size_t i=0; i<ships.size(); ++i) {
 
         if (ships[i].drawable) window.draw(ships[i]);
     }
 }
 
-void ShipsManager::update(WorldManager& world, EventList& events) {
+void ShipsManager::update(WorldManager& world, WindowManager& window) {
 
-    if (events.accelUp) {
-        ships[player_ship].accelUp();
-        events.accelUp = false;
-    }
-    if (events.accelDn) {
-        ships[player_ship].accelDn();
-        events.accelDn = false;
-    }
-    if (events.smallTurnLeft) {
-        ships[player_ship].turn(-1, false);
-        events.smallTurnLeft = false;
-    }
-    if (events.turnLeft) {
-        ships[player_ship].turn(-1, true);
-        events.turnLeft = false;
-    }
-    if (events.smallTurnRight) {
-        ships[player_ship].turn(1, false);
-        events.smallTurnRight = false;
-    }
-    if (events.turnRight) {
-        ships[player_ship].turn(1, true);
-        events.turnRight = false;
+    float delta = window.frameTime / (1000.f / 60.f);
+
+    //if (window.eventMap[window.bindings["speedInc"]]) {
+    if (window.eventMap["VK_UP"]) {
+        ships[playerShip].accelUp(delta);
     }
 
-    for (unsigned int i=0; i<ships.size(); ++i) {
+    //if (window.eventMap[window.bindings["speedDec"]]) {
+    if (window.eventMap["VK_DOWN"]) {
+        ships[playerShip].accelDn(delta);
+    }
 
-        ships[i].update(world);
+    //if (window.eventMap[window.bindings["turnLeft"]]) {
+    if (window.eventMap["VK_LEFT"]) {
+        ships[playerShip].turn(delta, -1);
+    }
 
-        for (unsigned int j=0; j<world.active_asteroids; ++j) {
+    //if (window.eventMap[window.bindings["turnRight"]]) {
+    if (window.eventMap["VK_RIGHT"]) {
+        ships[playerShip].turn(delta, 1);
+    }
 
-            if (world.list_asteroids[j].drawable && world.list_asteroids[j].alive) {
+    for (std::size_t i=0; i<ships.size(); ++i) {
 
-                int x = ships[i].getX() - world.list_asteroids[j].getX();
+        ships[i].update(world, delta);
+
+        for (std::size_t j=0; j<world.activeAsteroids; ++j) {
+
+            if (world.listAsteroids[j].drawable && world.listAsteroids[j].alive) {
+
+                int x = ships[i].getX() - world.listAsteroids[j].getX();
                 x = (x>0 ? x : -x);
 
-                int y = ships[i].getY() - world.list_asteroids[j].getY();
+                int y = ships[i].getY() - world.listAsteroids[j].getY();
                 y = (y>0 ? y : -y);
 
                 if (x + y < 1024) {//Distancia Manhattan
-                    if (Collision::PixelPerfectTest(ships[i], world.list_asteroids[j], 128)) {
+                    if (Collision::PixelPerfectTest(ships[i], world.listAsteroids[j], 128)) {
 
                         world.notifyImpact(j, ships[i].getCrashDmg());
 
-                        ships[i].takeDamage(world.list_asteroids[j].crashdmg);
+                        ships[i].takeDamage(delta, world.listAsteroids[j].crashdmg);
                     }
                 }
             }
         }
 
-        for (unsigned int j=0; j<world.list_checkpoints.size(); ++j) {
+        for (unsigned int j=0; j<world.listCheckpoints.size(); ++j) {
 
             if (
-                world.list_checkpoints[j].drawable &&
-                world.list_checkpoints[j].alive &&
-                !world.list_checkpoints[j].visited
+                world.listCheckpoints[j].drawable &&
+                world.listCheckpoints[j].alive &&
+                !world.listCheckpoints[j].visited
             ) {
 
-                int x = ships[i].getX() - world.list_checkpoints[j].getX();
+                int x = ships[i].getX() - world.listCheckpoints[j].getX();
                 x = (x>0 ? x : -x);
 
-                int y = ships[i].getY() - world.list_checkpoints[j].getY();
+                int y = ships[i].getY() - world.listCheckpoints[j].getY();
                 y = (y>0 ? y : -y);
 
                 if (x + y < 256) {//Distancia Manhattan
@@ -95,45 +91,49 @@ void ShipsManager::update(WorldManager& world, EventList& events) {
 
     //Mantiene un registro de la posicion del jugador para otras clases que lo requieran
     //(Priciplamente el bucle principal del programa y GunsManager)
-    world.playerposx = ships[player_ship].getX();
-    world.playerposy = ships[player_ship].getY();
-    world.playerposangle = ships[player_ship].getVAngle();
+    window.gameInfo.playerSpeed = ships[playerShip].getSpeed();
+    window.gameInfo.playerDamage = ships[playerShip].getDamage();
+    window.gameInfo.playerShields = ships[playerShip].getShields();
+    window.gameInfo.playerTime = ships[playerShip].getTime();
+    window.gameInfo.playerPosX = ships[playerShip].getX();
+    window.gameInfo.playerPosY = ships[playerShip].getY();
+    window.gameInfo.playerAngle = ships[playerShip].getVAngle();
 }
 
-void ShipsManager::reset() {
+void ShipsManager::reset(WindowManager& window) {
 
     ships.clear();
-    for (unsigned int i=0; i<MAX_SHIPS; ++i) { addShip(); }
+    for (std::size_t i=0; i<window.gameInfo.maxShips; ++i) { addShip(); }
 }
 
 float ShipsManager::getPlayerSpeed() {
 
-    return ships[player_ship].getSpeed();
+    return ships[playerShip].getSpeed();
 }
 
 float ShipsManager::getPlayerVAngle() {
 
-    return ships[player_ship].getVAngle();
+    return ships[playerShip].getVAngle();
 }
 
 float ShipsManager::getPlayerDamage() {
 
-    return ships[player_ship].getDamage();
+    return ships[playerShip].getDamage();
 }
 
 float ShipsManager::getPlayerShields() {
 
-    return ships[player_ship].getShields();
+    return ships[playerShip].getShields();
 }
 
 float ShipsManager::getPlayerTime() {
 
-    return ships[player_ship].getTime();
+    return ships[playerShip].getTime();
 }
 
 bool ShipsManager::playerDead() {
 
-    if (ships[player_ship].getDamage() == ships[player_ship].getDamageMax()) {
+    if (ships[playerShip].getDamage() == ships[playerShip].getDamageMax()) {
         return true;
     }
     return false;

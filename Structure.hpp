@@ -1,22 +1,21 @@
 #ifndef STRUCTURE_HPP
 #define STRUCTURE_HPP
 
+#include <SFML/Graphics.hpp>
+
 #include <cmath>
 
-#include "Config.hpp"
+#include "globals.hpp"
 
-using namespace sf;
-using namespace std;
-
-class Structure : public CircleShape {
+class Structure : public sf::CircleShape {
 
     public:
         //Constructors
         Structure();
         //Methods
-        void                update      (View view);
-        int                 getX        ()                      { return (int) getPosition().x; };
-        int                 getY        ()                      { return (int) getPosition().y; };
+        void                update      (sf::View view, float delta);
+        float               getX        ()                      { return getPosition().x; };
+        float               getY        ()                      { return getPosition().y; };
         //Fields
         bool                drawable;
         bool                alive;
@@ -27,7 +26,6 @@ class Structure : public CircleShape {
         //Constructors
         //Methods
         //Fields
-        static const double PI;
 };
 
 #endif
